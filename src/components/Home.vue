@@ -32,12 +32,12 @@
 
       <!-- Ship info -->
       <div v-for="spaceship in selectedFilter(spaceships)" :key="spaceship.name">
-        <h3>{{spaceship.name}}</h3>
+        <h4>{{spaceship.name}}</h4>
         <div v-for="member in spaceship.crew" :key="member.name">
           <hr>
-          <h5>Name: <em>{{member.name}}</em></h5>
-          <h5>Role: <em>{{member.role}}</em></h5>
-          <h5>Age: <em>{{member.age}}</em></h5>
+          <h6><b>Name: <em>{{member.name}}</em></b></h6>
+          <h6>Role: <em>{{member.role}}</em></h6>
+          <h6>Age: <em>{{member.age ? member.age : 'n/a'}}</em></h6>
         </div>
       </div>
     </div>
@@ -116,7 +116,8 @@ export default {
             throw new Error("The list of spacemen is empty");
           }
 
-          const spacemen = response.data.spacemen;
+          let spacemen = response.data.spacemen;
+          spacemen = spacemen.sort(() => Math.random() - 0.5);
 
           // TODO: shuffle spacemen
 
@@ -142,7 +143,9 @@ export default {
       console.log(spacemen);
 
       // TODO: fix this for a nice grouping
-      let subsetSize = Math.floor(spacemen.length / 3);
+      const groupSize = 5;
+      let subsetSize =
+        spacemen.length > groupSize ? groupSize : spacemen.length;
       subsetSize = subsetSize == 0 ? spacemen.length : subsetSize;
       const crew = spacemen.splice(0, subsetSize);
 
@@ -168,7 +171,7 @@ export default {
         })
         .join(".");
       // add random seed
-      shipName += ' '+(Math.floor(Math.random() * (100)) + 100).toString();
+      shipName += " " + (Math.floor(Math.random() * 100) + 100).toString();
       console.log(`Got ship name: ${shipName}`);
       return {
         name: shipName,
